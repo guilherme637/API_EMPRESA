@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\EmpresaRepository;
 use App\Repository\SocioRepository;
-use App\Service\Socio\EditarSocio;
-use App\Service\Socio\SocioFactory;
 use App\Service\Socio\SocioService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,26 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SocioController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
     private SocioRepository $socioRepository;
-    private SocioFactory $socioFactory;
-    private EditarSocio $editarSocio;
-    private EmpresaRepository $empresaRepository;
     private SocioService $socioService;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
         SocioRepository $socioRepository,
-        SocioFactory $socioFactory,
-        EditarSocio $editarSocio,
-        EmpresaRepository $empresaRepository,
         SocioService $socioService
     ) {
-        $this->entityManager = $entityManager;
         $this->socioRepository = $socioRepository;
-        $this->socioFactory = $socioFactory;
-        $this->editarSocio = $editarSocio;
-        $this->empresaRepository = $empresaRepository;
         $this->socioService = $socioService;
     }
 
