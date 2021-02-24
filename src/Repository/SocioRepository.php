@@ -13,7 +13,7 @@ class SocioRepository extends ServiceEntityRepository
         parent::__construct($registry, Socio::class);
     }
 
-    public function savarEmpresa(Socio $empresa): void
+    public function savarSocio(Socio $empresa): void
     {
         $this->getEntityManager()->persist($empresa);
         $this->getEntityManager()->flush();
@@ -42,5 +42,10 @@ class SocioRepository extends ServiceEntityRepository
         ]);
 
         return $empresa;
+    }
+
+    public function atualizar(): void
+    {
+        $this->getEntityManager()->flush();
     }
 }

@@ -6,6 +6,7 @@ use App\Repository\EmpresaRepository;
 use App\Repository\SocioRepository;
 use App\Service\Socio\EditarSocio;
 use App\Service\Socio\SocioFactory;
+use App\Service\Socio\SocioService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,19 +21,22 @@ class SocioController extends AbstractController
     private SocioFactory $socioFactory;
     private EditarSocio $editarSocio;
     private EmpresaRepository $empresaRepository;
+    private SocioService $socioService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         SocioRepository $socioRepository,
         SocioFactory $socioFactory,
         EditarSocio $editarSocio,
-        EmpresaRepository $empresaRepository
+        EmpresaRepository $empresaRepository,
+        SocioService $socioService
     ) {
         $this->entityManager = $entityManager;
         $this->socioRepository = $socioRepository;
         $this->socioFactory = $socioFactory;
         $this->editarSocio = $editarSocio;
         $this->empresaRepository = $empresaRepository;
+        $this->socioService = $socioService;
     }
 
     /**
@@ -40,7 +44,7 @@ class SocioController extends AbstractController
      */
     public function index(): Response
     {
-        $socios = $this->socioRepository->findAll();
+        $socios = $this->socioRepository->listarSocios();
 
         return new JsonResponse($socios, Response::HTTP_OK);
     }
@@ -50,10 +54,7 @@ class SocioController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $socio = $this->socioFactory->novoSocio($request->getContent(), $this->empresaRepository);
-
-        $this->entityManager->persist($socio);
-        $this->entityManager->flush();
+        $this->socioService->criarSocio($request->getContent());
 
         return new JsonResponse(['message' => 'Criado com sucesso.'], Response::HTTP_CREATED);
     }
@@ -75,12 +76,9 @@ class SocioController extends AbstractController
      */
     public function update(Request $request, int $id): Response
     {
-        $novoSocio = $this->socioFactory->novoSocio($request->getContent(), $this->empresaRepository);
-        $socioEditado = $this->editarSocio->editaSocio($this->socioRepository, $novoSocio, $id);
+        $status = $this->socioService->atualizarSocio($id ,$request->getContent());
 
-        $this->entityManager->flush();
-
-        return new Response('', $socioEditado);
+        return new Response('', $status);
     }
 
     /**
@@ -88,12 +86,7 @@ class SocioController extends AbstractController
      */
     public function delete(int $id): Response
     {
-        $socio = $this->socioRepository->find($id);
-
-        $this->entityManager->remove($socio);
-        $this->entityManager->flush();
-
-        $status = is_null($socio) ? Response::HTTP_BAD_REQUEST : Response::HTTP_NO_CONTENT;
+        $status = $this->socioService->removerSocio($id);
 
         return new Response('', $status);
     }

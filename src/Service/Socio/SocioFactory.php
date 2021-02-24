@@ -7,16 +7,15 @@ use Doctrine\Persistence\ObjectRepository;
 
 class SocioFactory
 {
-    public function novoSocio(string $dados, ObjectRepository $empresa): Socio
+    public function novoSocio(\stdClass $dados, ObjectRepository $empresa): Socio
     {
-        $dataJson = json_decode($dados);
-        $empresaDoSocio = $empresa->find($dataJson->empresa);
+        $empresaDoSocio = $empresa->find($dados->empresa);
 
         $socio = new Socio;
         $socio
-            ->setNomeSocio($dataJson->nome)
-            ->setCpf($dataJson->cpf)
-            ->setPosicao($dataJson->posicao)
+            ->setNomeSocio($dados->nome)
+            ->setCpf($dados->cpf)
+            ->setPosicao($dados->posicao)
             ->setEmpresa($empresaDoSocio);
 
         return $socio;

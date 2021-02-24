@@ -49,12 +49,12 @@ class EmpresaService extends AbstractController
         $empresa = $this->empresaRepository->buscarEmpresa($id);
 
         if (is_null($empresa)) {
-            return Response::HTTP_BAD_REQUEST;
+            return Response::HTTP_NOT_FOUND;
         }
 
         $this->empresaRepository->deletarEmpresa($empresa);
         $this->empresaRepository->atualiza();
 
-        return 204;
+        return Response::HTTP_NO_CONTENT;
     }
 }

@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\EmpresaRepository;
-use App\Service\Empresa\EditarEmpresa;
-use App\Service\Empresa\EmpresaFactory;
 use App\Service\Empresa\EmpresaService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,23 +12,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EmpresaController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-    private EmpresaFactory $empresaFactory;
+
     private EmpresaRepository $empresaRepository;
-    private EditarEmpresa $editarEmpresa;
     private EmpresaService $empresaService;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        EmpresaFactory $empresaFactory,
         EmpresaRepository $empresaRepository,
-        EditarEmpresa $editarEmpresa,
         EmpresaService $empresaService
     ) {
-        $this->entityManager = $entityManager;
-        $this->empresaFactory = $empresaFactory;
         $this->empresaRepository = $empresaRepository;
-        $this->editarEmpresa = $editarEmpresa;
         $this->empresaService = $empresaService;
     }
 
