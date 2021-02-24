@@ -6,15 +6,13 @@ use App\Entity\Empresa;
 
 class EmpresaFactory
 {
-    public function criarEmpresa(string $dados): Empresa
+    public function criarEmpresa($dados): Empresa
     {
-        $dadosJson = json_decode($dados);
-
         $empresa = new Empresa();
-        $empresa->setNomeEmpresa($dadosJson->nome);
-        $empresa->setCnpj($dadosJson->cnpj);
-        $empresa->setContato($dadosJson->contato);
-        $empresa->setLocal($dadosJson->local);
+        $empresa->setNomeEmpresa($dados->nome);
+        $empresa->setCnpj($dados->cnpj);
+        $empresa->setContato($dados->contato);
+        $empresa->setLocal($dados->local);
 
         return $empresa;
     }

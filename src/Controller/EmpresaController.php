@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\EmpresaRepository;
 use App\Service\Empresa\EditarEmpresa;
 use App\Service\Empresa\EmpresaFactory;
+use App\Service\Empresa\EmpresaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,17 +19,20 @@ class EmpresaController extends AbstractController
     private EmpresaFactory $empresaFactory;
     private EmpresaRepository $empresaRepository;
     private EditarEmpresa $editarEmpresa;
+    private EmpresaService $empresaService;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         EmpresaFactory $empresaFactory,
         EmpresaRepository $empresaRepository,
-        EditarEmpresa $editarEmpresa
+        EditarEmpresa $editarEmpresa,
+        EmpresaService $empresaService
     ) {
         $this->entityManager = $entityManager;
         $this->empresaFactory = $empresaFactory;
         $this->empresaRepository = $empresaRepository;
         $this->editarEmpresa = $editarEmpresa;
+        $this->empresaService = $empresaService;
     }
 
     /**
@@ -36,7 +40,7 @@ class EmpresaController extends AbstractController
      */
     public function index(): Response
     {
-        $empresas = $this->empresaRepository->findAll();
+        $empresas = $this->empresaRepository->listarTodasEmpresas();
 
         return new JsonResponse($empresas, Response::HTTP_OK);
     }
@@ -46,10 +50,7 @@ class EmpresaController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $empresa = $this->empresaFactory->criarEmpresa($request->getContent());
-
-        $this->entityManager->persist($empresa);
-        $this->entityManager->flush();
+        $this->empresaService->criarEmpresa($request->getContent());
 
         return new JsonResponse(['message' => 'Criado com sucesso.'], Response::HTTP_CREATED);
     }
@@ -59,7 +60,7 @@ class EmpresaController extends AbstractController
      */
     public function show(int $id): Response
     {
-        $empresa = $this->empresaRepository->find($id);
+        $empresa = $this->empresaRepository->buscarEmpresa($id);
         $status = is_null($empresa) ? Response::HTTP_NO_CONTENT : 200;
 
         return new JsonResponse($empresa, $status);
@@ -70,12 +71,9 @@ class EmpresaController extends AbstractController
      */
     public function update(int $id, Request $request): Response
     {
-        $novaEmpresa = $this->empresaFactory->criarEmpresa($request->getContent());
-        $editarEmpresa = $this->editarEmpresa->editaEmpresa($this->empresaRepository, $novaEmpresa, $id);
+        $empresaEditada = $this->empresaService->atualizarEmpresa($request->getContent(), $id);
 
-        $this->entityManager->flush();
-
-        return new Response('', $editarEmpresa);
+        return new Response('', $empresaEditada);
     }
 
     /**
@@ -83,12 +81,7 @@ class EmpresaController extends AbstractController
      */
     public function delete(int $id): Response
     {
-        $empresa = $this->empresaRepository->find($id);
-
-        $this->entityManager->remove($empresa);
-        $this->entityManager->flush();
-
-        $status = is_null($empresa) ? Response::HTTP_BAD_REQUEST : Response::HTTP_NO_CONTENT;
+        $status = $this->empresaService->removerEmpresa($id);
 
         return new Response('', $status);
     }

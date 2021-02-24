@@ -12,4 +12,31 @@ class EmpresaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Empresa::class);
     }
+
+    public function savarEmpresa(Empresa $empresa): void
+    {
+        $this->getEntityManager()->persist($empresa);
+        $this->getEntityManager()->flush();
+    }
+
+    public function listarTodasEmpresas():array
+    {
+        return $this->findAll();
+    }
+
+    public function buscarEmpresa(int $id): ?Empresa
+    {
+        return $this->find($id);
+    }
+
+    public function deletarEmpresa(Empresa $empresa): void
+    {
+        $this->getEntityManager()->remove($empresa);
+        $this->getEntityManager()->flush();
+    }
+
+    public function atualiza(): void
+    {
+        $this->getEntityManager()->flush();
+    }
 }

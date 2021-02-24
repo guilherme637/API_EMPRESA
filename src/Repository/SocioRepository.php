@@ -13,6 +13,28 @@ class SocioRepository extends ServiceEntityRepository
         parent::__construct($registry, Socio::class);
     }
 
+    public function savarEmpresa(Socio $empresa): void
+    {
+        $this->getEntityManager()->persist($empresa);
+        $this->getEntityManager()->flush();
+    }
+
+    public function listarSocios():array
+    {
+        return $this->findAll();
+    }
+
+    public function buscarSocio(int $id): ?Socio
+    {
+        return $this->find($id);
+    }
+
+    public function deletarSocio(Socio $socio): void
+    {
+        $this->getEntityManager()->remove($socio);
+        $this->getEntityManager()->flush();
+    }
+
     public function buscarEmpresa(int $id): array
     {
         $empresa = $this->findBy([
