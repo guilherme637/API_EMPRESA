@@ -4,10 +4,11 @@ namespace App\Service\Socio;
 
 use App\Repository\EmpresaRepository;
 use App\Repository\SocioRepository;
+use App\Service\ServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class SocioService extends AbstractController
+class SocioService extends AbstractController implements ServiceInterface
 {
     private SocioRepository $socioRepository;
     private SocioFactory $socioFactory;
@@ -29,7 +30,7 @@ class SocioService extends AbstractController
         $this->empresaRepository = $empresaRepository;
     }
 
-    public function criarSocio(string $dados): void
+    public function criarEntidade(string $dados): void
     {
         $dadosJson = json_decode($dados);
 
@@ -39,7 +40,7 @@ class SocioService extends AbstractController
         $this->socioRepository->atualizar();
     }
 
-    public function atualizarSocio(int $id, string $dados): int
+    public function atualizarEntidade(string $dados, int $id): int
     {
         $dadosJson = json_decode($dados);
 
@@ -51,7 +52,7 @@ class SocioService extends AbstractController
         return $socioEditado;
     }
 
-    public function removerSocio(int $id): int
+    public function removerEntidade(int $id): int
     {
         $socio = $this->socioRepository->buscarSocio($id);
 

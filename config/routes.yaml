@@ -1,3 +1,59 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+empresas:
+  path: /empresas
+  controller: App\Controller\EmpresaController::index
+  methods:
+    - GET
+
+nova_empresa:
+  path: /empresas
+  controller: App\Controller\EmpresaController::store
+  methods:
+    - POST
+
+buscar_empresa:
+  path: /empresa/{id}
+  controller: App\Controller\EmpresaController::show
+  methods:
+    - GET
+
+atualizar_empresa:
+  path: /empresa/{id}/update
+  controller: App\Controller\EmpresaController::update
+  methods:
+    - PUT
+
+remover_empresa:
+  path: /empresa/{id}/delete
+  controller: App\Controller\EmpresaController::delete
+  methods:
+    - DELETE
+
+socios:
+  path: /socios
+  controller: App\Controller\SocioController::index
+  methods:
+    - GET
+
+novo_socio:
+  path: /socios
+  controller: App\Controller\SocioController::store
+  methods:
+    - POST
+
+buscar_socio:
+  path: /socio/{id}
+  controller: App\Controller\SocioController::show
+  methods:
+    - GET
+
+atualizar_socio:
+  path: /socio/{id}/update
+  controller: App\Controller\SocioController::update
+  methods:
+    - PUT
+
+remover_socio:
+  path: /socio/{id}/delete
+  controller: App\Controller\SocioController::delete
+  methods:
+    - DELETE

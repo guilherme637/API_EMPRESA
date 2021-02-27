@@ -2,12 +2,12 @@
 
 namespace App\Service\Empresa;
 
-use App\Entity\Empresa;
 use App\Repository\EmpresaRepository;
+use App\Service\ServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class EmpresaService extends AbstractController
+class EmpresaService extends AbstractController implements ServiceInterface
 {
     private EmpresaRepository $empresaRepository;
     private EmpresaFactory $empresaFactory;
@@ -23,7 +23,7 @@ class EmpresaService extends AbstractController
         $this->editarEmpresa = $editarEmpresa;
     }
 
-    public function criarEmpresa(string $dados): void
+    public function criarEntidade(string $dados): void
     {
         $dadosJson = json_decode($dados);
 
@@ -32,7 +32,7 @@ class EmpresaService extends AbstractController
         $this->empresaRepository->savarEmpresa($empresa);
     }
 
-    public function atualizarEmpresa(string $dados, int $id): int
+    public function atualizarEntidade(string $dados, int $id): int
     {
         $dadosJson = json_decode($dados);
 
@@ -44,7 +44,7 @@ class EmpresaService extends AbstractController
         return $empresaCriada;
     }
 
-    public function removerEmpresa(int $id): int
+    public function removerEntidade(int $id): int
     {
         $empresa = $this->empresaRepository->buscarEmpresa($id);
 
