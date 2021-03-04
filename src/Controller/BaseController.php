@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\ExtratorDadosRequest;
+use App\Service\ResponseFactory;
 use App\Service\ServiceInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,20 +15,37 @@ abstract class BaseController extends AbstractController
 {
     protected ObjectRepository $repository;
     protected ServiceInterface $service;
+    private ExtratorDadosRequest $extratorDadosRequest;
 
     public function __construct(
         ObjectRepository $repository,
-        ServiceInterface $service
+        ServiceInterface $service,
+        ExtratorDadosRequest $extratorDadosRequest,
     ) {
         $this->repository = $repository;
         $this->service = $service;
+        $this->extratorDadosRequest = $extratorDadosRequest;
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $entidade = $this->repository->findAll();
+        $infoOrdernacao = $this->extratorDadosRequest->buscarDadosOrdernado($request);
+        $infoFiltro = $this->extratorDadosRequest->buscarDadosFiltrado($request);
+        [$paginaAtual, $itensPorPagiana] = $this->extratorDadosRequest->buscarDadosPorPagina($request);
 
-        return new JsonResponse($entidade, Response::HTTP_OK);
+        $entidade = $this->repository->findBy(
+            $infoFiltro,
+            $infoOrdernacao,
+            $itensPorPagiana,
+            ($paginaAtual - 1) * $itensPorPagiana
+        );
+
+        $responseFactory = new ResponseFactory(
+            true,
+            $entidade
+        );
+
+        return $responseFactory->getResponse();
     }
 
     public function store(Request $request): Response

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\SocioRepository;
+use App\Service\ExtratorDadosRequest;
 use App\Service\Socio\SocioService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,9 +13,10 @@ class SocioController extends BaseController
 {
     public function __construct(
         SocioRepository $socioRepository,
-        SocioService $socioService
+        SocioService $socioService,
+        ExtratorDadosRequest $extratorDadosRequest
     ) {
-        parent::__construct($socioRepository, $socioService);
+        parent::__construct($socioRepository, $socioService, $extratorDadosRequest);
     }
 
     /**

@@ -139,7 +139,15 @@ class Empresa implements \JsonSerializable
             'nomeDaEmpresa' => $this->getNomeEmpresa(),
             'cnpj' => $this->getCnpj(),
             'contato' => $this->getContato(),
-            'local' => $this->getLocal()
+            'local' => $this->getLocal(),
+            '_links' =>
+            [
+                [
+                    'type' => 'GET',
+                    'rel' => 'self',
+                    'path' => '/empresa/' . $this->getId()
+                ]
+            ]
         ];
     }
 }

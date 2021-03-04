@@ -98,7 +98,19 @@ class Socio implements \JsonSerializable
             'nome' => $this->getNomeSocio(),
             'cpf' => $this->getCpf(),
             'posicao' => $this->getPosicao(),
-            'empresa' => $this->getEmpresa()
+            'empresa' => $this->getEmpresa(),
+            '_links' => [
+                [
+                    'type' => 'GET',
+                    'rel' => 'self',
+                    'path' => '/socio/' . $this->getId()
+                ],
+                [
+                    'type' => 'GET',
+                    'rel' => 'empresas',
+                    'path' => '/socio/empresa/' . $this->getEmpresa()->getId()
+                ]
+            ]
         ];
     }
 }
